@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Mail\OtpMail;
+use App\Mail\TokenMail;
+use App\Models\ForgotPassword;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -92,4 +95,69 @@ class AuthController extends Controller
     public function forgotpassword(){
         return view('auth.forgotpassword');
     }
+
+    public function forgotpasswordpost(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        $email=$request->email;
+        $token=Str::random(60);
+        $created=Carbon::now();
+        $emailExist=User::where('email',$email)->first();
+        if ($emailExist){
+            $user_id=$emailExist->id;
+            $user=ForgotPassword::where('user_id',$user_id)->first();
+            if($user){
+                $user->token=$token;
+                $user->createdAT=$created;
+                $user->save();
+            }
+            else{
+                $newUser=new ForgotPassword();
+                $newUser->user_id=$user_id;
+                $newUser->token=$token;
+                $newUser->createdAT=$created;
+                $newUser->save();
+            }
+                Mail::to($email)->send(new TokenMail($token));
+                return back()->with('success','Reset link sent to your email');
+            }
+        else{
+                return back()->with('error','incorrect email');
+            }
+        }
+
+    public function setnewpassword($token){
+            return view('auth.resetpassword',compact('token'));
+        }
+
+    public function resetpasswordpost(Request $request ,$token){
+            $request->validate([
+                'password'=>'required|confirmed|min:6',
+            ]);
+            $tokenExist=ForgotPassword::where('token',$token)->first();
+            if($tokenExist){
+                if (Carbon::now()->subMinutes(5)<$tokenExist->createdAt){
+                    $id=$tokenExist->user_id;
+                    $userExist=User::where('id',$id)->first();
+                    $userExist->password=Hash::make($request->password);
+                    $userExist->save();
+                    return redirect(route('login'))->with('success','password change successfully');
+
+
+                }
+                else{
+                    return redirect(route('forgotpassword'))->with('error','Reset link has expired');
+                }
+            }
+            else{
+                return redirect(route('forgotpassword'))->with('error','incorrect  reset link');
+            }
+    }
+    
+    public function logout(){
+        Auth::logout();
+        return redirect(route('login'));
+    }
+
 }

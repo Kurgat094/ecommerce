@@ -26,7 +26,7 @@
                                     <a class="nav-link" href="#">Orders</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#" style="float: right;">Logout</a>
+                                    <a class="nav-link" href="{{ route('logout')}}" style="float: right;">Logout</a>
                                 </li>
                             </ul>
                         </div>
