@@ -48,11 +48,6 @@
                             <input type="text" class="form-control" name="phone" id="phone" required>
                         </div>
 
-                        
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Shipping Address</label>
-                            <textarea class="form-control" name="address" id="address" rows="2" required></textarea>
-                        </div>
 
                         
                         <div class="mb-3">

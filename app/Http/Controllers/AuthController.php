@@ -24,7 +24,6 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|numeric|unique:users',
-            'address' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
         // store user 
@@ -33,7 +32,6 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'address' => $request->address,
             'password' => Hash::make($request->password),
             'otp' => $otp,
             'otp_expire_at' => Carbon::now()->addMinutes(5),

@@ -23,3 +23,9 @@ Route::get('/logout',[AuthController::class,'logout'])->name('logout');
 
 //customer
 Route::get('/dashboard/',[CustomerController::class,'dashboard'])->name('dashboard');
+Route::get('/about',[CustomerController::class,'about'])->name('about');
+Route::get('/products',[CustomerController::class,'products'])->name('products');
+Route::get('/contact_us',[CustomerController::class,'contact_us'])->name('contact_us');
+
+
+

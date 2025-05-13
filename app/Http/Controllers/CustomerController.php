@@ -15,17 +15,17 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function about()
     {
-        //
+        return view('customer.about');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function products()
     {
-        //
+        return view('customer.product');
+    }
+    public function contact_us()
+    {
+        return view('customer.contact_us');
     }
 
     /**
